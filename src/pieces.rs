@@ -1,17 +1,18 @@
 
 use im::hashset::HashSet;
+use std::collections::{HashSet as MutableHashSet};
 use std::vec::Vec;
 
-    #[derive(PartialEq, Eq, Hash, Clone)]
+    #[derive(PartialEq, Eq, Hash, Clone, Copy)]
     pub enum ChessPiece { Rook , Bishop , Knight , Queen , King }
 
-    #[derive(PartialEq, Eq, Hash, Clone)]
+    #[derive(PartialEq, Eq, Hash, Clone, Copy)]
     pub struct Piece {
        pub row: i8, 
        pub col: i8,
        pub piece: ChessPiece
     }
-
+    #[derive(PartialEq, Eq, Hash, Clone)]
     pub struct Board {
         pub m: i8, 
         pub n: i8, 
@@ -80,17 +81,18 @@ use std::vec::Vec;
             return Board::new(self.m, self.n, updated_pieces, self.number_of_pieces);
         }
 
-        // pub fn find_candidate(&self, chess_piece: ChessPiece) -> Board {
-        //     let result = HashSet::new();
-        //     for i in 1..self.m {
-        //        for j in 1..self.n {
-        //            let piece = Piece {row: i, col: j, piece: chess_piece };
-        //            if Self::is_safe(&self, piece) {
-        //              result.update(Self::place(&self, piece));
-        //            }
-        //         } 
-        //     }
-        // }
+        pub fn find_candidate(&self, chess_piece: ChessPiece) -> HashSet<Board> {
+            let mut result = MutableHashSet::new();
+            for i in 1..self.m {
+               for j in 1..self.n {
+                   let piece = Piece {row: i, col: j, piece: chess_piece };
+                   if Self::is_safe(&self, piece) {
+                     result.insert(Self::place(&self, piece));
+                   }
+                } 
+            }
+            return HashSet::from(result);
+        }
     
     }
 
