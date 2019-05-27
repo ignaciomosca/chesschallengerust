@@ -1,11 +1,11 @@
 
-use std::collections::{HashSet};
+use im::hashset::HashSet;
 use std::vec::Vec;
 
-    #[derive(PartialEq, Eq, Hash)]
+    #[derive(PartialEq, Eq, Hash, Clone)]
     pub enum ChessPiece { Rook , Bishop , Knight , Queen , King }
 
-    #[derive(PartialEq, Eq, Hash)]
+    #[derive(PartialEq, Eq, Hash, Clone)]
     pub struct Piece {
        pub row: i8, 
        pub col: i8,
@@ -75,11 +75,22 @@ use std::vec::Vec;
             return self.used_pieces.len() == self.number_of_pieces as usize;
         }
 
-        // pub fn place(&self, chess_piece: Piece) -> Board {
-        //     self.used_pieces.insert(chess_piece);
-        //     return Board::new(self.m, self.n, self.used_pieces, self.number_of_pieces);
-        // }
+        pub fn place(&self, chess_piece: Piece) -> Board {
+            let updated_pieces = self.used_pieces.update(chess_piece);
+            return Board::new(self.m, self.n, updated_pieces, self.number_of_pieces);
+        }
 
+        // pub fn find_candidate(&self, chess_piece: ChessPiece) -> Board {
+        //     let result = HashSet::new();
+        //     for i in 1..self.m {
+        //        for j in 1..self.n {
+        //            let piece = Piece {row: i, col: j, piece: chess_piece };
+        //            if Self::is_safe(&self, piece) {
+        //              result.update(Self::place(&self, piece));
+        //            }
+        //         } 
+        //     }
+        // }
     
     }
 
