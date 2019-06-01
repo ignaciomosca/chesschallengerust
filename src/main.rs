@@ -1,8 +1,11 @@
 
 mod pieces;
-use pieces::{Piece, ChessPiece};
+use pieces::{Board, ChessPiece, Piece, solution};
+use im::hashset::HashSet;
 
 fn main() {
-    let piece = Piece { row: 1, col: 1, piece: ChessPiece::King };
-    println!("Hello, world!");
+    let board = Board {m: 7, n: 7, used_pieces: HashSet::new(), number_of_pieces: 7};
+    let pieces = vec![ChessPiece::King,ChessPiece::King,ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Bishop, ChessPiece::Bishop, ChessPiece::Knight];
+    let solutions = solution(board, pieces, HashSet::new());
+    println!("Size {}", solutions.len());
 }
