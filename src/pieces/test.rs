@@ -403,4 +403,22 @@ fn test_queen_movements() {
 }
 
 #[test]
-fn test_board() {}
+fn test_board() {
+    let board = Board {
+        m: 7,
+        n: 7,
+        used_pieces: HashSet::new(),
+        number_of_pieces: 7,
+    };
+    let pieces = vec![
+        ChessPiece::King,
+        ChessPiece::King,
+        ChessPiece::Queen,
+        ChessPiece::Queen,
+        ChessPiece::Bishop,
+        ChessPiece::Bishop,
+        ChessPiece::Knight,
+    ];
+    let solutions = solution(board, pieces, HashSet::new());
+    assert_eq!(3063828, solutions.len());
+}
