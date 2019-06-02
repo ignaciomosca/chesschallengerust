@@ -141,3 +141,6 @@ pub fn solution(
         }
     }
 }
+
+#[cfg(test)]
+mod test;
