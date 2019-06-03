@@ -18,6 +18,6 @@ fn main() {
         ChessPiece::Bishop,
         ChessPiece::Knight,
     ];
-    let solutions = solution(board, pieces, HashSet::new());
+    let solutions = solution(board, pieces, HashSet::new(),HashSet::new());
     println!("Size {}", solutions.len());
 }

@@ -419,6 +419,6 @@ fn test_board() {
         ChessPiece::Bishop,
         ChessPiece::Knight,
     ];
-    let solutions = solution(board, pieces, HashSet::new());
+    let solutions = solution(board, pieces, HashSet::new(),HashSet::new());
     assert_eq!(3063828, solutions.len());
 }

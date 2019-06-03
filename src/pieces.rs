@@ -73,14 +73,14 @@ impl Piece {
 impl Board {
     pub fn new(m: i8, n: i8, used_pieces: HashSet<Piece>, number_of_pieces: i8) -> Board {
         return Board {
-            m: m,
-            n: n,
-            used_pieces: used_pieces,
-            number_of_pieces: number_of_pieces,
+            m,
+            n,
+            used_pieces,
+            number_of_pieces,
         };
     }
 
-    pub fn is_safe(&self, chess_piece: Piece) -> bool {
+    pub fn is_safe(self, chess_piece: Piece) -> bool {
         self.used_pieces
             .iter()
             .any(|piece| !piece.attacks(&chess_piece) && !chess_piece.attacks(&piece))
@@ -90,23 +90,24 @@ impl Board {
         return self.used_pieces.len() == self.number_of_pieces as usize;
     }
 
-    pub fn place(&self, chess_piece: Piece) -> Board {
+    pub fn place(self, chess_piece: Piece) -> Board {
         let updated_pieces = self.used_pieces.update(chess_piece);
         return Board::new(self.m, self.n, updated_pieces, self.number_of_pieces);
     }
 }
 
-pub fn find_candidate(board: &Board, chess_piece: ChessPiece) -> HashSet<Board> {
+pub fn find_candidate(board: Board, piece: ChessPiece) -> HashSet<Board> {
+    println!("Hello {}", 1);
     let mut result = MutableHashSet::new();
-    for i in 1..board.m {
-        for j in 1..board.n {
+    for row in 1..7 {
+        for col in 1..7 {
             let piece = Piece {
-                row: i,
-                col: j,
-                piece: chess_piece,
+                row,
+                col,
+                piece,
             };
-            if board.is_safe(piece) {
-                result.insert(board.place(piece));
+            if board.clone().is_safe(piece) {
+                result.insert(board.clone().place(piece));
             }
         }
     }
@@ -116,30 +117,34 @@ pub fn find_candidate(board: &Board, chess_piece: ChessPiece) -> HashSet<Board> 
 pub fn solution(
     board: Board,
     pieces: Vec<ChessPiece>,
-    solutions: HashSet<Board>,
+    mut solutions: HashSet<Board>,
+    mut tested_configurations: HashSet<Board>,
 ) -> HashSet<Board> {
-    if pieces.is_empty() {
-        let mut ret = solutions;
-        ret.retain(|solution| solution.done());
-        return ret;
-    } else {
-        let head = pieces[0];
-        if pieces.len() == 1 {
-            let new_candidates = solutions
-                .iter()
-                .flat_map(|solution| find_candidate(solution, head))
-                .collect();
-            return solution(board, Vec::new(), new_candidates);
-        } else {
-            let length = pieces.len() - 2;
-            let tail = Vec::from_iter(pieces[1..length].iter().cloned());
-            let new_candidates = solutions
-                .iter()
-                .flat_map(|solution| find_candidate(solution, head))
-                .collect();
-            return solution(board, tail, new_candidates);
+    if !pieces.is_empty() {
+        for row in 1..7 {
+            for col in 1..7 {
+                let new_piece = Piece{ row, col, piece: pieces[0] };
+                if board.is_safe(new_piece) {
+                    let new_board = board.place(new_piece);
+                    if pieces.len() != 1 {
+                        if tested_configurations.contains(&new_board) {
+                            let tail = Vec::from_iter(pieces[1..pieces.len()].iter().cloned());
+                            tested_configurations.insert(new_board);
+                            solution(new_board, tail, solutions, tested_configurations);
+                        }
+                    } else {
+                        if !solutions.contains(&new_board) {
+                            solutions.insert(new_board);
+                        }
+
+                    }
+                }
+
+            }
         }
+
     }
+    return solutions;
 }
 
 #[cfg(test)]
