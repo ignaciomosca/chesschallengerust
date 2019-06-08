@@ -454,3 +454,63 @@ fn test_board_4x4_0K_2Q_1B_0R_0N() {
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
     assert_eq!(72, solutions.len());
 }
+
+#[test]
+fn test_board_4x4_1Q_2R() {
+    let board = Board {
+        m: 4,
+        n: 4,
+        used_pieces: ImmutableHashSet::new(),
+    };
+    let pieces = vec![ChessPiece::Queen, ChessPiece::Rook, ChessPiece::Rook];
+    let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
+    assert_eq!(116, solutions.len());
+}
+
+#[test]
+fn test_board_5x5_2K_2Q() {
+    let board = Board {
+        m: 5,
+        n: 5,
+        used_pieces: ImmutableHashSet::new(),
+    };
+    let pieces = vec![ChessPiece::King, ChessPiece::King, ChessPiece::Queen, ChessPiece::Queen];
+    let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
+    assert_eq!(816, solutions.len());
+}
+
+#[test]
+fn test_board_5x5_1Q_2B() {
+    let board = Board {
+        m: 5,
+        n: 5,
+        used_pieces: ImmutableHashSet::new(),
+    };
+    let pieces = vec![ChessPiece::Queen, ChessPiece::Bishop, ChessPiece::Bishop];
+    let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
+    assert_eq!(1152, solutions.len());
+}
+
+#[test]
+fn test_board_5x5_1Q_1B_1R() {
+    let board = Board {
+        m: 5,
+        n: 5,
+        used_pieces: ImmutableHashSet::new(),
+    };
+    let pieces = vec![ChessPiece::Queen, ChessPiece::Bishop, ChessPiece::Rook];
+    let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
+    assert_eq!(1224, solutions.len());
+}
+
+#[test]
+fn test_board_5x5_2K_2B() {
+    let board = Board {
+        m: 5,
+        n: 5,
+        used_pieces: ImmutableHashSet::new(),
+    };
+    let pieces = vec![ChessPiece::King, ChessPiece::King, ChessPiece::Bishop, ChessPiece::Bishop];
+    let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
+    assert_eq!(7596, solutions.len());
+}
