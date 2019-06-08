@@ -1,9 +1,5 @@
-use std::{
-    collections::HashSet,
-    iter::FromIterator,
-    vec::Vec,
-};
 use im::hashset::HashSet as ImmutableHashSet;
+use std::{collections::HashSet, iter::FromIterator, vec::Vec};
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, Debug)]
 pub enum ChessPiece {
@@ -24,7 +20,7 @@ pub struct Piece {
 pub struct Board {
     pub m: i8,
     pub n: i8,
-    pub used_pieces: ImmutableHashSet<Piece>
+    pub used_pieces: ImmutableHashSet<Piece>,
 }
 
 impl Piece {
@@ -73,11 +69,7 @@ impl Piece {
 
 impl Board {
     pub fn new(m: i8, n: i8, used_pieces: ImmutableHashSet<Piece>) -> Board {
-        return Board {
-            m,
-            n,
-            used_pieces,
-        };
+        return Board { m, n, used_pieces };
     }
 
     pub fn is_safe(self, chess_piece: Piece) -> bool {
@@ -101,30 +93,32 @@ pub fn solution(
     if !pieces.is_empty() {
         for row in 1..=board.m {
             for col in 1..=board.n {
-                let new_piece = Piece{ row, col, piece: pieces[0] };
+                let new_piece = Piece {
+                    row,
+                    col,
+                    piece: pieces[0],
+                };
                 if board.clone().is_safe(new_piece) {
                     let new_board = board.clone().place(new_piece);
                     if pieces.len() != 1 {
-                        let contain_board = Board::new(new_board.m, new_board.n, new_board.used_pieces.clone());
+                        let contain_board =
+                            Board::new(new_board.m, new_board.n, new_board.used_pieces.clone());
                         if !tested_configurations.contains(&contain_board) {
                             let tail = Vec::from_iter(pieces[1..pieces.len()].iter().cloned());
                             tested_configurations.insert(contain_board);
                             solution(new_board, tail, solutions, tested_configurations);
                         }
                     } else {
-                        let a_board_pieces = new_board.used_pieces.clone();                    
+                        let a_board_pieces = new_board.used_pieces.clone();
                         let a_board = Board::new(board.m, board.n, a_board_pieces);
                         if !solutions.contains(&a_board) {
                             solutions.insert(a_board);
                         }
-
                     }
                 }
-
             }
         }
     }
-    println!("solutions {:?}", solutions);
     return solutions.clone();
 }
 

@@ -1,13 +1,13 @@
 mod pieces;
-use std::collections::HashSet;
-use pieces::{solution, Board, ChessPiece, Piece};
 use im::hashset::HashSet as ImmutableHashSet;
+use pieces::{solution, Board, ChessPiece, Piece};
+use std::collections::HashSet;
 
 fn main() {
     let board = Board {
         m: 7,
         n: 7,
-        used_pieces: ImmutableHashSet::new()
+        used_pieces: ImmutableHashSet::new(),
     };
     let pieces = vec![
         ChessPiece::King,
@@ -19,5 +19,5 @@ fn main() {
         ChessPiece::Knight,
     ];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
-    println!("Size {}", solutions.len());
+    println!("Size {}", solutions.len()); // it has to be 3063828
 }
