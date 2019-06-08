@@ -514,3 +514,15 @@ fn test_board_5x5_2K_2B() {
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
     assert_eq!(7596, solutions.len());
 }
+
+#[test]
+fn test_board_8x8_8Q() {
+    let board = Board {
+        m: 8,
+        n: 8,
+        used_pieces: ImmutableHashSet::new(),
+    };
+    let pieces = vec![ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen];
+    let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
+    assert_eq!(92, solutions.len());
+}

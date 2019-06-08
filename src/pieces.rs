@@ -53,15 +53,9 @@ impl Piece {
     pub fn attacks(&self, chess_piece: super::Piece) -> bool {
         match self.piece {
             ChessPiece::Rook => self.row == chess_piece.row || self.col == chess_piece.col,
-            ChessPiece::Bishop => {
-                i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col)
-            }
+            ChessPiece::Bishop => i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col),
             ChessPiece::Knight => Self::knight_moves(&self, chess_piece),
-            ChessPiece::Queen => {
-                self.row == chess_piece.row
-                    || self.col == chess_piece.col
-                    || i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col)
-            }
+            ChessPiece::Queen => self.row == chess_piece.row || self.col == chess_piece.col || i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col),
             ChessPiece::King => Self::king_moves(&self, chess_piece),
         }
     }
