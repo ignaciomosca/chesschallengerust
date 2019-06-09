@@ -17,12 +17,12 @@ Based on experience with previous problems, I reduced the current problem to an 
 
 # Dependencies
 
-* Haskell
-* Stack
+* Rust
+* Cargo
 
 # Instructions
 
-* `git clone https://ignaciomosca@bitbucket.org/ignaciomosca/chesschallengerust.git`
+* `git clone https://github.com/ignaciomosca/chesschallengerust.git`
 * `cd chesschallengerust`
 * `cargo build`
 * `cargo run` | `cargo test`

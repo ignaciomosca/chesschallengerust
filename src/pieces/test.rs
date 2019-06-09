@@ -407,7 +407,7 @@ fn test_3x3_board_2K_1R() {
     let board = Board {
         m: 3,
         n: 3,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![ChessPiece::King, ChessPiece::King, ChessPiece::Rook];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
@@ -419,7 +419,7 @@ fn test_board_4x4_2K_2Q_0B_0R_0N() {
     let board = Board {
         m: 4,
         n: 4,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![
         ChessPiece::King,
@@ -436,7 +436,7 @@ fn test_board_4x4_0K_1Q_0B_2R_0N() {
     let board = Board {
         m: 4,
         n: 4,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Rook, ChessPiece::Rook];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
@@ -448,7 +448,7 @@ fn test_board_4x4_0K_2Q_1B_0R_0N() {
     let board = Board {
         m: 4,
         n: 4,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Bishop];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
@@ -460,7 +460,7 @@ fn test_board_4x4_1Q_2R() {
     let board = Board {
         m: 4,
         n: 4,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Rook, ChessPiece::Rook];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
@@ -472,7 +472,7 @@ fn test_board_5x5_2K_2Q() {
     let board = Board {
         m: 5,
         n: 5,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![ChessPiece::King, ChessPiece::King, ChessPiece::Queen, ChessPiece::Queen];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
@@ -484,7 +484,7 @@ fn test_board_5x5_1Q_2B() {
     let board = Board {
         m: 5,
         n: 5,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Bishop, ChessPiece::Bishop];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
@@ -496,7 +496,7 @@ fn test_board_5x5_1Q_1B_1R() {
     let board = Board {
         m: 5,
         n: 5,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Bishop, ChessPiece::Rook];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
@@ -508,7 +508,7 @@ fn test_board_5x5_2K_2B() {
     let board = Board {
         m: 5,
         n: 5,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![ChessPiece::King, ChessPiece::King, ChessPiece::Bishop, ChessPiece::Bishop];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
@@ -520,7 +520,7 @@ fn test_board_8x8_8Q() {
     let board = Board {
         m: 8,
         n: 8,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());

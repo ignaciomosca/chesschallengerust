@@ -1,13 +1,13 @@
 mod pieces;
-use im::hashset::HashSet as ImmutableHashSet;
 use pieces::{solution, Board, ChessPiece, Piece};
 use std::collections::HashSet;
+use std::collections::BTreeSet;
 
 fn main() {
     let board = Board {
         m: 7,
         n: 7,
-        used_pieces: ImmutableHashSet::new(),
+        used_pieces: BTreeSet::new(),
     };
     let pieces = vec![
         ChessPiece::King,
