@@ -1,4 +1,4 @@
-use std::{collections::HashSet, iter::FromIterator, vec::Vec, collections::BTreeSet};
+use std::{collections::BTreeSet, collections::HashSet, iter::FromIterator, vec::Vec};
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord, Debug)]
 pub enum ChessPiece {
@@ -23,7 +23,7 @@ pub struct Board {
 }
 
 impl Piece {
-    pub fn knight_moves(&self, chess_piece: super::Piece) -> bool {
+    pub fn knight_moves(&self, chess_piece: Piece) -> bool {
         let x_moves = vec![1, 2, 2, 1, -1, -2, -2, -1];
         let y_moves = vec![-2, -1, 1, 2, 2, 1, -1, -2];
         for i in 0..8 {
@@ -36,7 +36,7 @@ impl Piece {
         return false;
     }
 
-    pub fn king_moves(&self, chess_piece: super::Piece) -> bool {
+    pub fn king_moves(&self, chess_piece: Piece) -> bool {
         let x_moves = vec![-1, -1, -1, 0, 1, 1, 1, 0];
         let y_moves = vec![-1, 0, 1, 1, 1, 0, -1, -1];
         for i in 0..8 {
@@ -49,12 +49,18 @@ impl Piece {
         return false;
     }
 
-    pub fn attacks(&self, chess_piece: super::Piece) -> bool {
+    pub fn attacks(&self, chess_piece: Piece) -> bool {
         match self.piece {
             ChessPiece::Rook => self.row == chess_piece.row || self.col == chess_piece.col,
-            ChessPiece::Bishop => i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col),
+            ChessPiece::Bishop => {
+                i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col)
+            }
             ChessPiece::Knight => Self::knight_moves(&self, chess_piece),
-            ChessPiece::Queen => self.row == chess_piece.row || self.col == chess_piece.col || i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col),
+            ChessPiece::Queen => {
+                self.row == chess_piece.row
+                    || self.col == chess_piece.col
+                    || i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col)
+            }
             ChessPiece::King => Self::king_moves(&self, chess_piece),
         }
     }
@@ -65,7 +71,7 @@ impl Board {
         return Board { m, n, used_pieces };
     }
 
-    pub fn is_safe(self, chess_piece: Piece) -> bool {
+    pub fn is_safe(&self, chess_piece: Piece) -> bool {
         self.used_pieces
             .iter()
             .all(|&piece| !piece.attacks(chess_piece) && !chess_piece.attacks(piece))
@@ -92,8 +98,8 @@ pub fn solution(
                     col,
                     piece: pieces[0],
                 };
-                if board.clone().is_safe(new_piece) {
-                    let new_board = board.clone().place(new_piece);
+                if board.is_safe(new_piece) {
+                    let new_board = board.place(new_piece);
                     if pieces.len() != 1 {
                         let contain_board =
                             Board::new(new_board.m, new_board.n, new_board.used_pieces.clone());
@@ -115,6 +121,3 @@ pub fn solution(
     }
     return solutions.clone();
 }
-
-#[cfg(test)]
-mod test;

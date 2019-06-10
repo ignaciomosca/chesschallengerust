@@ -1,4 +1,5 @@
-use super::*;
+use chess::*;
+use std::{collections::BTreeSet, collections::HashSet, iter::FromIterator, vec::Vec};
 
 #[test]
 fn test_king_movements() {
@@ -474,7 +475,12 @@ fn test_board_5x5_2K_2Q() {
         n: 5,
         used_pieces: BTreeSet::new(),
     };
-    let pieces = vec![ChessPiece::King, ChessPiece::King, ChessPiece::Queen, ChessPiece::Queen];
+    let pieces = vec![
+        ChessPiece::King,
+        ChessPiece::King,
+        ChessPiece::Queen,
+        ChessPiece::Queen,
+    ];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
     assert_eq!(816, solutions.len());
 }
@@ -510,7 +516,12 @@ fn test_board_5x5_2K_2B() {
         n: 5,
         used_pieces: BTreeSet::new(),
     };
-    let pieces = vec![ChessPiece::King, ChessPiece::King, ChessPiece::Bishop, ChessPiece::Bishop];
+    let pieces = vec![
+        ChessPiece::King,
+        ChessPiece::King,
+        ChessPiece::Bishop,
+        ChessPiece::Bishop,
+    ];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
     assert_eq!(7596, solutions.len());
 }
@@ -522,7 +533,16 @@ fn test_board_8x8_8Q() {
         n: 8,
         used_pieces: BTreeSet::new(),
     };
-    let pieces = vec![ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Queen];
+    let pieces = vec![
+        ChessPiece::Queen,
+        ChessPiece::Queen,
+        ChessPiece::Queen,
+        ChessPiece::Queen,
+        ChessPiece::Queen,
+        ChessPiece::Queen,
+        ChessPiece::Queen,
+        ChessPiece::Queen,
+    ];
     let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
     assert_eq!(92, solutions.len());
 }

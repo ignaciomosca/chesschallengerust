@@ -1,7 +1,6 @@
-mod pieces;
-use pieces::{solution, Board, ChessPiece, Piece};
-use std::collections::HashSet;
+use chess::{solution, Board, ChessPiece, Piece};
 use std::collections::BTreeSet;
+use std::collections::HashSet;
 
 fn main() {
     let board = Board {
