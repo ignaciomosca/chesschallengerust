@@ -84,12 +84,12 @@ impl Board {
     }
 }
 
-pub fn solution(
+pub fn solution<'a>(
     board: Board,
     pieces: Vec<ChessPiece>,
-    solutions: &mut HashSet<Board>,
+    solutions: &'a mut HashSet<Board>,
     tested_configurations: &mut HashSet<Board>,
-) -> HashSet<Board> {
+) -> &'a HashSet<Board> {
     if !pieces.is_empty() {
         for row in 1..=board.m {
             for col in 1..=board.n {
@@ -119,5 +119,5 @@ pub fn solution(
             }
         }
     }
-    return solutions.clone();
+    solutions
 }

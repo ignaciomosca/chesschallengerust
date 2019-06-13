@@ -1,4 +1,4 @@
-use chess::{solution, Board, ChessPiece, Piece};
+use chess::{solution, Board, ChessPiece};
 use std::collections::BTreeSet;
 use std::collections::HashSet;
 
@@ -17,6 +17,7 @@ fn main() {
         ChessPiece::Bishop,
         ChessPiece::Knight,
     ];
-    let solutions = solution(board, pieces, &mut HashSet::new(), &mut HashSet::new());
+    let mut solutions: HashSet<Board> = HashSet::new();
+    solution(board, pieces, &mut solutions, &mut HashSet::new());
     println!("Size {}", solutions.len()); // it has to be 3063828
 }
