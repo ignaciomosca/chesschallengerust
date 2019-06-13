@@ -109,10 +109,8 @@ pub fn solution<'a>(
                             solution(new_board, tail, solutions, tested_configurations);
                         }
                     } else {
-                        let a_board_pieces = new_board.used_pieces.clone();
-                        let a_board = Board::new(board.m, board.n, a_board_pieces);
-                        if !solutions.contains(&a_board) {
-                            solutions.insert(a_board);
+                        if !solutions.contains(&new_board) {
+                            solutions.insert(new_board);
                         }
                     }
                 }
