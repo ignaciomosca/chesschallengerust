@@ -487,6 +487,7 @@ fn test_board_4x4_2K_2Q_0B_0R_0N() {
     ];
     let mut solutions: HashSet<Board> = HashSet::new();
     solution(board, pieces, &mut solutions, &mut HashSet::new());
+    println!("solution {:?}", solutions);
     assert_eq!(20, solutions.len());
 }
 
