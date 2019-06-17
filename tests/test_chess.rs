@@ -420,12 +420,12 @@ fn test_contains_board() {
     let board_a = Board {
         m: 3,
         n: 3,
-        used_pieces: BTreeSet::from_iter(pieces_1.iter().cloned()),
+        used_pieces: Vec::from_iter(pieces_1.iter().cloned()),
     };
     let board_b = Board {
         m: 3,
         n: 3,
-        used_pieces: BTreeSet::from_iter(pieces_2.iter().cloned()),
+        used_pieces: Vec::from_iter(pieces_2.iter().cloned()),
     };
     let mut hash_set = HashSet::new();
     hash_set.insert(board_a);
@@ -444,19 +444,31 @@ fn test_same_board() {
         col: 4,
         piece: ChessPiece::King,
     };
-    let pieces_1 = vec![piece_1, piece_2];
-    let pieces_2 = vec![piece_2, piece_1];
+    let piece_3 = Piece {
+        row: 3,
+        col: 4,
+        piece: ChessPiece::King,
+    };
+    let piece_4 = Piece {
+        row: 3,
+        col: 4,
+        piece: ChessPiece::King,
+    };
+    let pieces_1 = vec![piece_1, piece_3];
+    let pieces_2 = vec![piece_2, piece_4, piece_1];
+    let used_pieces_1 = Vec::from_iter(pieces_1.iter().cloned());
+    let used_pieces_2 = Vec::from_iter(pieces_2.iter().cloned());
     let board_a = Board {
         m: 3,
         n: 3,
-        used_pieces: BTreeSet::from_iter(pieces_1.iter().cloned()),
+        used_pieces: Vec::from_iter(pieces_1.iter().cloned()),
     };
     let board_b = Board {
         m: 3,
         n: 3,
-        used_pieces: BTreeSet::from_iter(pieces_2.iter().cloned()),
+        used_pieces: Vec::from_iter(pieces_2.iter().cloned()),
     };
-    assert_eq!(board_a, board_b);
+    assert_ne!(used_pieces_1, used_pieces_2);
 }
 
 #[test]
@@ -464,7 +476,7 @@ fn test_3x3_board_2K_1R() {
     let board = Board {
         m: 3,
         n: 3,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![ChessPiece::King, ChessPiece::King, ChessPiece::Rook];
     let mut solutions: HashSet<Board> = HashSet::new();
@@ -477,7 +489,7 @@ fn test_board_4x4_2K_2Q_0B_0R_0N() {
     let board = Board {
         m: 4,
         n: 4,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![
         ChessPiece::King,
@@ -496,7 +508,7 @@ fn test_board_4x4_0K_1Q_0B_2R_0N() {
     let board = Board {
         m: 4,
         n: 4,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Rook, ChessPiece::Rook];
     let mut solutions: HashSet<Board> = HashSet::new();
@@ -509,7 +521,7 @@ fn test_board_4x4_0K_2Q_1B_0R_0N() {
     let board = Board {
         m: 4,
         n: 4,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Bishop];
     let mut solutions: HashSet<Board> = HashSet::new();
@@ -522,7 +534,7 @@ fn test_board_4x4_1Q_2R() {
     let board = Board {
         m: 4,
         n: 4,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Rook, ChessPiece::Rook];
     let mut solutions: HashSet<Board> = HashSet::new();
@@ -535,7 +547,7 @@ fn test_board_5x5_2K_2Q() {
     let board = Board {
         m: 5,
         n: 5,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![
         ChessPiece::King,
@@ -553,7 +565,7 @@ fn test_board_5x5_1Q_2B() {
     let board = Board {
         m: 5,
         n: 5,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Bishop, ChessPiece::Bishop];
     let mut solutions: HashSet<Board> = HashSet::new();
@@ -566,7 +578,7 @@ fn test_board_5x5_1Q_1B_1R() {
     let board = Board {
         m: 5,
         n: 5,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Bishop, ChessPiece::Rook];
     let mut solutions: HashSet<Board> = HashSet::new();
@@ -579,7 +591,7 @@ fn test_board_5x5_2K_2B() {
     let board = Board {
         m: 5,
         n: 5,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![
         ChessPiece::King,
@@ -597,7 +609,7 @@ fn test_board_8x8_8Q() {
     let board = Board {
         m: 8,
         n: 8,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![
         ChessPiece::Queen,

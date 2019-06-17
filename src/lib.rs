@@ -1,4 +1,5 @@
-use std::{collections::BTreeSet, collections::HashSet, iter::FromIterator, vec::Vec};
+use std::{collections::HashSet, iter::FromIterator, vec::Vec};
+use std::hash::{Hash, Hasher};
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord, Debug)]
 pub enum ChessPiece {
@@ -15,11 +16,19 @@ pub struct Piece {
     pub col: i8,
     pub piece: ChessPiece,
 }
-#[derive(PartialEq, Eq, Hash, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug, PartialOrd)]
 pub struct Board {
     pub m: i8,
     pub n: i8,
-    pub used_pieces: BTreeSet<Piece>,
+    pub used_pieces: Vec<Piece>,
+}
+
+impl Hash for Board {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.m.hash(state);
+        self.n.hash(state);
+        self.used_pieces.hash(state);        
+    }
 }
 
 impl Piece {
@@ -67,7 +76,7 @@ impl Piece {
 }
 
 impl Board {
-    pub fn new(m: i8, n: i8, used_pieces: BTreeSet<Piece>) -> Board {
+    pub fn new(m: i8, n: i8, used_pieces: Vec<Piece>) -> Board {
         return Board { m, n, used_pieces };
     }
 
@@ -79,7 +88,7 @@ impl Board {
 
     pub fn place(&self, chess_piece: Piece) -> Board {
         let mut updated_pieces = self.used_pieces.clone();
-        updated_pieces.insert(chess_piece);
+        updated_pieces.push(chess_piece);
         return Board::new(self.m, self.n, updated_pieces);
     }
 }

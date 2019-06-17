@@ -8,7 +8,7 @@ fn main() {
     let board = Board {
         m: 7,
         n: 7,
-        used_pieces: BTreeSet::new(),
+        used_pieces: Vec::new(),
     };
     let pieces = vec![
         ChessPiece::King,
