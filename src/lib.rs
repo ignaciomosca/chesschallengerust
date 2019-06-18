@@ -1,5 +1,4 @@
 use std::{collections::HashSet, iter::FromIterator, vec::Vec};
-use std::hash::{Hash, Hasher};
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord, Debug)]
 pub enum ChessPiece {
@@ -16,19 +15,11 @@ pub struct Piece {
     pub col: i8,
     pub piece: ChessPiece,
 }
-#[derive(PartialEq, Eq, Clone, Debug, PartialOrd)]
+#[derive(PartialEq, Eq, Clone, Hash, Debug, PartialOrd)]
 pub struct Board {
     pub m: i8,
     pub n: i8,
     pub used_pieces: Vec<Piece>,
-}
-
-impl Hash for Board {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.m.hash(state);
-        self.n.hash(state);
-        self.used_pieces.hash(state);        
-    }
 }
 
 impl Piece {
@@ -88,7 +79,10 @@ impl Board {
 
     pub fn place(&self, chess_piece: Piece) -> Board {
         let mut updated_pieces = self.used_pieces.clone();
-        updated_pieces.push(chess_piece);
+        if !updated_pieces.contains(&chess_piece) {
+            updated_pieces.push(chess_piece);
+            updated_pieces.sort();
+        }
         return Board::new(self.m, self.n, updated_pieces);
     }
 }
@@ -109,13 +103,13 @@ pub fn solution<'a>(
                 };
                 if board.is_safe(new_piece) {
                     let new_board = board.place(new_piece);
-                    if pieces.len() != 1 {
-                        let contain_board =
-                            Board::new(new_board.m, new_board.n, new_board.used_pieces.clone());
-                        if !tested_configurations.contains(&contain_board) {
+                    if pieces.len() != 1 {                        
+                        if !tested_configurations.contains(&new_board) {
+                            let next_board_pieces = new_board.used_pieces.clone();
+                            let next_board = Board::new(board.m, board.n, next_board_pieces);
+                            tested_configurations.insert(new_board);
                             let tail = Vec::from_iter(pieces[1..pieces.len()].iter().cloned());
-                            tested_configurations.insert(contain_board);
-                            solution(new_board, tail, solutions, tested_configurations);
+                            solution(next_board, tail, solutions, tested_configurations);
                         }
                     } else {
                         if !solutions.contains(&new_board) {

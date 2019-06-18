@@ -1,5 +1,5 @@
 use chess::*;
-use std::{collections::BTreeSet, collections::HashSet, iter::FromIterator, vec::Vec};
+use std::{collections::HashSet, iter::FromIterator, vec::Vec};
 
 #[test]
 fn test_king_movements() {
@@ -401,35 +401,6 @@ fn test_queen_movements() {
     };
     let attack_18 = piece_queen.attacks(other_piece_18);
     assert_eq!(attack_18, false);
-}
-
-#[test]
-fn test_contains_board() {
-    let piece_1 = Piece {
-        row: 5,
-        col: 6,
-        piece: ChessPiece::King,
-    };
-    let piece_2 = Piece {
-        row: 3,
-        col: 4,
-        piece: ChessPiece::King,
-    };
-    let pieces_1 = vec![piece_1, piece_2];
-    let pieces_2 = vec![piece_2, piece_1];
-    let board_a = Board {
-        m: 3,
-        n: 3,
-        used_pieces: Vec::from_iter(pieces_1.iter().cloned()),
-    };
-    let board_b = Board {
-        m: 3,
-        n: 3,
-        used_pieces: Vec::from_iter(pieces_2.iter().cloned()),
-    };
-    let mut hash_set = HashSet::new();
-    hash_set.insert(board_a);
-    assert!(hash_set.contains(&board_b));
 }
 
 #[test]

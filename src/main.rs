@@ -1,8 +1,5 @@
 use chess::{solution, Board, ChessPiece};
-use std::collections::BTreeSet;
 use std::collections::HashSet;
-use std::fs::OpenOptions;
-use std::io::prelude::*;
 
 fn main() {
     let board = Board {
