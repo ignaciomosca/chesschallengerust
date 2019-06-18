@@ -417,29 +417,43 @@ fn test_same_board() {
     };
     let piece_3 = Piece {
         row: 3,
-        col: 4,
+        col: 3,
         piece: ChessPiece::King,
     };
     let piece_4 = Piece {
         row: 3,
-        col: 4,
+        col: 3,
         piece: ChessPiece::King,
     };
-    let pieces_1 = vec![piece_1, piece_3];
-    let pieces_2 = vec![piece_2, piece_4, piece_1];
-    let used_pieces_1 = Vec::from_iter(pieces_1.iter().cloned());
-    let used_pieces_2 = Vec::from_iter(pieces_2.iter().cloned());
     let board_a = Board {
         m: 3,
         n: 3,
-        used_pieces: Vec::from_iter(pieces_1.iter().cloned()),
+        used_pieces: Vec::new(),
     };
     let board_b = Board {
         m: 3,
         n: 3,
-        used_pieces: Vec::from_iter(pieces_2.iter().cloned()),
+        used_pieces: Vec::new(),
     };
-    assert_ne!(used_pieces_1, used_pieces_2);
+    let new_board_a_1 = board_a.place(piece_1);
+    let new_board_b_1 = board_b.place(piece_1);
+    assert_eq!(new_board_a_1, new_board_b_1);
+
+    let mut hashset_1 = HashSet::new();
+    hashset_1.insert(new_board_a_1);
+    assert!(hashset_1.contains(&new_board_b_1));
+
+    let new_board_a_2 = board_a.place(piece_3);
+    let new_board_b_2 = board_b.place(piece_4);
+    assert_eq!(new_board_a_2, new_board_b_2);
+
+    let new_board_a_3 = new_board_a_2.place(piece_2);
+    let new_board_b_3 = new_board_b_2.place(piece_3);
+    assert_ne!(new_board_a_3, new_board_b_3);
+
+    let mut hashset_2 = HashSet::new();
+    hashset_2.insert(new_board_a_2);
+    assert!(hashset_2.contains(&new_board_b_2));
 }
 
 #[test]
