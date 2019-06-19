@@ -1,5 +1,5 @@
 use chess::*;
-use std::{collections::HashSet, iter::FromIterator, vec::Vec};
+use std::{collections::HashSet, vec::Vec};
 
 #[test]
 fn test_king_movements() {

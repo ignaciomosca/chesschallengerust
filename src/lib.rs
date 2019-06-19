@@ -23,7 +23,11 @@ pub struct Board {
 }
 
 impl Piece {
-    pub fn knight_moves(&self, chess_piece: Piece) -> bool {
+
+    // x_moves and y_moves are the coordinates where a knight can be moved to
+    // This is done to avoid iterating twice over an array
+    // It has an 'L' shaped size
+    fn knight_moves(&self, chess_piece: Piece) -> bool {
         let x_moves = vec![1, 2, 2, 1, -1, -2, -2, -1];
         let y_moves = vec![-2, -1, 1, 2, 2, 1, -1, -2];
         for i in 0..8 {
@@ -36,7 +40,10 @@ impl Piece {
         return false;
     }
 
-    pub fn king_moves(&self, chess_piece: Piece) -> bool {
+    // x_moves and y_moves are the coordinates where a king can be moved to.
+    // This is done to avoid iterating twice over an array
+    // It has an '*' shaped size
+    fn king_moves(&self, chess_piece: Piece) -> bool {
         let x_moves = vec![-1, -1, -1, 0, 1, 1, 1, 0];
         let y_moves = vec![-1, 0, 1, 1, 1, 0, -1, -1];
         for i in 0..8 {
@@ -52,15 +59,9 @@ impl Piece {
     pub fn attacks(&self, chess_piece: Piece) -> bool {
         match self.piece {
             ChessPiece::Rook => self.row == chess_piece.row || self.col == chess_piece.col,
-            ChessPiece::Bishop => {
-                i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col)
-            }
+            ChessPiece::Bishop => i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col),
             ChessPiece::Knight => Self::knight_moves(&self, chess_piece),
-            ChessPiece::Queen => {
-                self.row == chess_piece.row
-                    || self.col == chess_piece.col
-                    || i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col)
-            }
+            ChessPiece::Queen => self.row == chess_piece.row || self.col == chess_piece.col || i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col),
             ChessPiece::King => Self::king_moves(&self, chess_piece),
         }
     }
