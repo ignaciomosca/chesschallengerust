@@ -122,9 +122,7 @@ pub fn solution<'a>(
                             solution(next_board, tail, solutions, tested_configurations);
                         }
                     } else {
-                        if !solutions.contains(&new_board) {
-                            solutions.insert(new_board);
-                        }
+                        solutions.insert(new_board);                        
                     }
                 }
             }
