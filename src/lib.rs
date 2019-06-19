@@ -23,45 +23,54 @@ pub struct Board {
 }
 
 impl Piece {
-
-    // x_moves and y_moves are the coordinates where a knight can be moved to
-    // This is done to avoid iterating twice over an array
-    // It has an 'L' shaped size
     fn knight_moves(&self, chess_piece: Piece) -> bool {
-        let x_moves = vec![1, 2, 2, 1, -1, -2, -2, -1];
-        let y_moves = vec![-2, -1, 1, 2, 2, 1, -1, -2];
-        for i in 0..8 {
-            let dest_row = self.row + x_moves[i];
-            let dest_col = self.col + y_moves[i];
-            if dest_row == chess_piece.row && dest_col == chess_piece.col {
-                return true;
-            }
-        }
-        return false;
+        const KNIGHT_MOVES: [(i8, i8); 8] = [
+            (1, -2),
+            (2, -1),
+            (2, 1),
+            (1, 2),
+            (-1, 2),
+            (-2, 1),
+            (-2, -1),
+            (-1, -2),
+        ];
+        KNIGHT_MOVES.iter().any(|(x_offset, y_offset)| {
+            let dest_row = self.row + x_offset;
+            let dest_col = self.col + y_offset;
+            dest_row == chess_piece.row && dest_col == chess_piece.col
+        })
     }
 
-    // x_moves and y_moves are the coordinates where a king can be moved to.
-    // This is done to avoid iterating twice over an array
-    // It has an '*' shaped size
     fn king_moves(&self, chess_piece: Piece) -> bool {
-        let x_moves = vec![-1, -1, -1, 0, 1, 1, 1, 0];
-        let y_moves = vec![-1, 0, 1, 1, 1, 0, -1, -1];
-        for i in 0..8 {
-            let dest_row = self.row + x_moves[i];
-            let dest_col = self.col + y_moves[i];
-            if dest_row == chess_piece.row && dest_col == chess_piece.col {
-                return true;
-            }
-        }
-        return false;
+        const KING_MOVES: [(i8, i8); 8] = [
+            (-1, -1),
+            (-1, 0),
+            (-1, 1),
+            (0, -1),
+            (0, 1),
+            (1, -1),
+            (1, 0),
+            (1, 1),
+        ];
+        KING_MOVES.iter().any(|(x_offset, y_offset)| {
+            let dest_row = self.row + x_offset;
+            let dest_col = self.col + y_offset;
+            dest_row == chess_piece.row && dest_col == chess_piece.col
+        })
     }
 
     pub fn attacks(&self, chess_piece: Piece) -> bool {
         match self.piece {
             ChessPiece::Rook => self.row == chess_piece.row || self.col == chess_piece.col,
-            ChessPiece::Bishop => i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col),
+            ChessPiece::Bishop => {
+                i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col)
+            }
             ChessPiece::Knight => Self::knight_moves(&self, chess_piece),
-            ChessPiece::Queen => self.row == chess_piece.row || self.col == chess_piece.col || i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col),
+            ChessPiece::Queen => {
+                self.row == chess_piece.row
+                    || self.col == chess_piece.col
+                    || i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col)
+            }
             ChessPiece::King => Self::king_moves(&self, chess_piece),
         }
     }
@@ -104,7 +113,7 @@ pub fn solution<'a>(
                 };
                 if board.is_safe(new_piece) {
                     let new_board = board.place(new_piece);
-                    if pieces.len() != 1 {                        
+                    if pieces.len() != 1 {
                         if !tested_configurations.contains(&new_board) {
                             let next_board_pieces = new_board.used_pieces.clone();
                             let next_board = Board::new(board.m, board.n, next_board_pieces);
