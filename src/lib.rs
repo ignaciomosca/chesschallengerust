@@ -24,11 +24,12 @@ pub struct Board {
 
 impl Piece {
     fn knight_moves(&self, chess_piece: Piece) -> bool {
-        const KNIGHT_MOVES: [(i8, i8); 8] = [
+        const KNIGHT_MOVES: [(i8, i8); 9] = [
             (1, -2),
             (2, -1),
             (2, 1),
             (1, 2),
+            (0, 0),
             (-1, 2),
             (-2, 1),
             (-2, -1),
@@ -42,11 +43,12 @@ impl Piece {
     }
 
     fn king_moves(&self, chess_piece: Piece) -> bool {
-        const KING_MOVES: [(i8, i8); 8] = [
+        const KING_MOVES: [(i8, i8); 9] = [
             (-1, -1),
             (-1, 0),
             (-1, 1),
             (0, -1),
+            (0, 0),
             (0, 1),
             (1, -1),
             (1, 0),
@@ -122,7 +124,7 @@ pub fn solution<'a>(
                             solution(next_board, tail, solutions, tested_configurations);
                         }
                     } else {
-                        solutions.insert(new_board);                        
+                        solutions.insert(new_board);
                     }
                 }
             }
