@@ -23,7 +23,7 @@ pub struct Board {
 }
 
 impl Piece {
-    fn knight_moves(&self, chess_piece: Piece) -> bool {
+    fn knight_moves(self, chess_piece: Piece) -> bool {
         const KNIGHT_MOVES: [(i8, i8); 9] = [
             (1, -2),
             (2, -1),
@@ -42,7 +42,7 @@ impl Piece {
         })
     }
 
-    fn king_moves(&self, chess_piece: Piece) -> bool {
+    fn king_moves(self, chess_piece: Piece) -> bool {
         const KING_MOVES: [(i8, i8); 9] = [
             (-1, -1),
             (-1, 0),
@@ -61,26 +61,26 @@ impl Piece {
         })
     }
 
-    pub fn attacks(&self, chess_piece: Piece) -> bool {
+    pub fn attacks(self, chess_piece: Piece) -> bool {
         match self.piece {
             ChessPiece::Rook => self.row == chess_piece.row || self.col == chess_piece.col,
             ChessPiece::Bishop => {
                 i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col)
             }
-            ChessPiece::Knight => Self::knight_moves(&self, chess_piece),
+            ChessPiece::Knight => Self::knight_moves(self, chess_piece),
             ChessPiece::Queen => {
                 self.row == chess_piece.row
                     || self.col == chess_piece.col
                     || i8::abs(self.row - chess_piece.row) == i8::abs(self.col - chess_piece.col)
             }
-            ChessPiece::King => Self::king_moves(&self, chess_piece),
+            ChessPiece::King => Self::king_moves(self, chess_piece),
         }
     }
 }
 
 impl Board {
     pub fn new(m: i8, n: i8, used_pieces: Vec<Piece>) -> Board {
-        return Board { m, n, used_pieces };
+        Board { m, n, used_pieces }
     }
 
     pub fn is_safe(&self, chess_piece: Piece) -> bool {
@@ -95,7 +95,7 @@ impl Board {
             updated_pieces.push(chess_piece);
             updated_pieces.sort();
         }
-        return Board::new(self.m, self.n, updated_pieces);
+        Board::new(self.m, self.n, updated_pieces)
     }
 }
 
@@ -116,10 +116,8 @@ pub fn solution<'a>(
                 if board.is_safe(new_piece) {
                     let new_board = board.place(new_piece);
                     if pieces.len() != 1 {
-                        if !tested_configurations.contains(&new_board) {
-                            let next_board_pieces = new_board.used_pieces.clone();
-                            let next_board = Board::new(board.m, board.n, next_board_pieces);
-                            tested_configurations.insert(new_board);
+                        if tested_configurations.insert(new_board.clone()) {
+                            let next_board = new_board.clone();
                             let tail = Vec::from_iter(pieces[1..pieces.len()].iter().cloned());
                             solution(next_board, tail, solutions, tested_configurations);
                         }
