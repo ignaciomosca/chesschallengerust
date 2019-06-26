@@ -1,5 +1,5 @@
 use chess::{solution, Board, ChessPiece};
-use std::collections::HashSet;
+use std::{collections::HashSet, collections::VecDeque};
 
 fn main() {
     let board = Board {
@@ -17,7 +17,9 @@ fn main() {
         ChessPiece::Knight,
     ];
     let mut solutions: HashSet<Board> = HashSet::new();
-    solution(board, pieces, &mut solutions, &mut HashSet::new());
+    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
+    board_stack.push_front((board,pieces));
+    solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     println!("Size {}", solutions.len()); // it has to be 3063828
 
 
