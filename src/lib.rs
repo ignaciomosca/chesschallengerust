@@ -1,4 +1,5 @@
-use std::{collections::HashSet, collections::VecDeque, iter::FromIterator, vec::Vec};
+use std::vec::Vec;
+use std::collections::{HashSet, VecDeque};
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord, Debug)]
 pub enum ChessPiece {
@@ -100,7 +101,7 @@ impl Board {
 }
 
 pub fn solution<'a>(
-    board_stack: &mut VecDeque<(Board, Vec<ChessPiece>)>,
+    board_stack: &mut VecDeque<(Board, &[ChessPiece])>,
     solutions: &'a mut HashSet<Board>,
     tested_configurations: &mut HashSet<Board>,
 ) -> &'a HashSet<Board> {
@@ -118,7 +119,7 @@ pub fn solution<'a>(
                     if pieces.len() != 1 {
                         if tested_configurations.insert(new_board.clone()) {
                             let next_board = new_board.clone();
-                            let tail = Vec::from_iter(pieces[1..pieces.len()].iter().cloned());
+                            let tail = &pieces[1..pieces.len()];
                             board_stack.push_front((next_board, tail));
                         }
                     } else {

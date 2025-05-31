@@ -457,22 +457,22 @@ fn test_same_board() {
 }
 
 #[test]
-fn test_3x3_board_2K_1R() {
+fn test_3x3_board_2_k_1_r() {
     let board = Board {
         m: 3,
         n: 3,
         used_pieces: Vec::new(),
     };
-    let pieces = vec![ChessPiece::King, ChessPiece::King, ChessPiece::Rook];
+    let pieces = [ChessPiece::King, ChessPiece::King, ChessPiece::Rook];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     assert_eq!(4, solutions.len());
 }
 
 #[test]
-fn test_board_4x4_2K_2Q_0B_0R_0N() {
+fn test_board_4x4_2_k_2_q_0_b_0_r_0_n() {
     let board = Board {
         m: 4,
         n: 4,
@@ -485,15 +485,15 @@ fn test_board_4x4_2K_2Q_0B_0R_0N() {
         ChessPiece::Queen,
     ];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     println!("solution {:?}", solutions);
     assert_eq!(20, solutions.len());
 }
 
 #[test]
-fn test_board_4x4_0K_1Q_0B_2R_0N() {
+fn test_board_4x4_0_k_1_q_0_b_2_r_0_n() {
     let board = Board {
         m: 4,
         n: 4,
@@ -501,14 +501,14 @@ fn test_board_4x4_0K_1Q_0B_2R_0N() {
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Rook, ChessPiece::Rook];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     assert_eq!(116, solutions.len());
 }
 
 #[test]
-fn test_board_4x4_0K_2Q_1B_0R_0N() {
+fn test_board_4x4_0_k_2_q_1_b_0_r_0_n() {
     let board = Board {
         m: 4,
         n: 4,
@@ -516,14 +516,14 @@ fn test_board_4x4_0K_2Q_1B_0R_0N() {
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Queen, ChessPiece::Bishop];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     assert_eq!(72, solutions.len());
 }
 
 #[test]
-fn test_board_4x4_1Q_2R() {
+fn test_board_4x4_1_q_2_r() {
     let board = Board {
         m: 4,
         n: 4,
@@ -531,14 +531,14 @@ fn test_board_4x4_1Q_2R() {
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Rook, ChessPiece::Rook];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     assert_eq!(116, solutions.len());
 }
 
 #[test]
-fn test_board_5x5_2K_2Q() {
+fn test_board_5x5_2_k_2_q() {
     let board = Board {
         m: 5,
         n: 5,
@@ -551,14 +551,14 @@ fn test_board_5x5_2K_2Q() {
         ChessPiece::Queen,
     ];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     assert_eq!(816, solutions.len());
 }
 
 #[test]
-fn test_board_5x5_1Q_2B() {
+fn test_board_5x5_1_q_2_b() {
     let board = Board {
         m: 5,
         n: 5,
@@ -566,14 +566,14 @@ fn test_board_5x5_1Q_2B() {
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Bishop, ChessPiece::Bishop];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     assert_eq!(1152, solutions.len());
 }
 
 #[test]
-fn test_board_5x5_1Q_1B_1R() {
+fn test_board_5x5_1_q_1_b_1_r() {
     let board = Board {
         m: 5,
         n: 5,
@@ -581,14 +581,14 @@ fn test_board_5x5_1Q_1B_1R() {
     };
     let pieces = vec![ChessPiece::Queen, ChessPiece::Bishop, ChessPiece::Rook];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     assert_eq!(1224, solutions.len());
 }
 
 #[test]
-fn test_board_5x5_2K_2B() {
+fn test_board_5x5_2_k_2_b() {
     let board = Board {
         m: 5,
         n: 5,
@@ -601,14 +601,14 @@ fn test_board_5x5_2K_2B() {
         ChessPiece::Bishop,
     ];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     assert_eq!(7596, solutions.len());
 }
 
 #[test]
-fn test_board_8x8_8Q() {
+fn test_board_8x8_8_q() {
     let board = Board {
         m: 8,
         n: 8,
@@ -625,8 +625,31 @@ fn test_board_8x8_8Q() {
         ChessPiece::Queen,
     ];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     assert_eq!(92, solutions.len());
+}
+
+#[test]
+fn test_board_7x7_2_k_2_q_2_b_1_k() {
+    let board = Board {
+        m: 7,
+        n: 7,
+        used_pieces: Vec::new(),
+    };
+    let pieces = vec![
+        ChessPiece::King,
+        ChessPiece::King,
+        ChessPiece::Queen,
+        ChessPiece::Queen,
+        ChessPiece::Bishop,
+        ChessPiece::Bishop,
+        ChessPiece::Knight,
+    ];
+    let mut solutions: HashSet<Board> = HashSet::new();
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
+    solution(&mut board_stack, &mut solutions, &mut HashSet::new());
+    assert_eq!(3_063_828, solutions.len());
 }

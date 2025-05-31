@@ -7,7 +7,7 @@ fn main() {
         n: 7,
         used_pieces: Vec::new(),
     };
-    let pieces = vec![
+    let pieces = [
         ChessPiece::King,
         ChessPiece::King,
         ChessPiece::Queen,
@@ -17,8 +17,8 @@ fn main() {
         ChessPiece::Knight,
     ];
     let mut solutions: HashSet<Board> = HashSet::new();
-    let mut board_stack: VecDeque<(Board, Vec<ChessPiece>)> = VecDeque::new();
-    board_stack.push_front((board,pieces));
+    let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+    board_stack.push_front((board, &pieces));
     solution(&mut board_stack, &mut solutions, &mut HashSet::new());
     println!("Size {}", solutions.len()); // it has to be 3063828
 
