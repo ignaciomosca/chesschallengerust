@@ -2,4 +2,4 @@
 name = "chess"
 version = "0.1.0"
 authors = ["ignaciomosca <ignaciomosca@outlook.com>"]
-edition = "2018"
+edition = "2021"

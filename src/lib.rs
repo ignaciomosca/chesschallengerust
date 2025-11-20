@@ -1,6 +1,37 @@
-use std::vec::Vec;
+//! Chess puzzle solver library.
+//!
+//! This library provides tools for solving the chess challenge problem: finding all unique
+//! configurations of chess pieces on an M×N board where no piece can attack any other piece.
+//!
+//! # Example
+//!
+//! ```
+//! use chess::{solution, Board, ChessPiece};
+//! use std::collections::{HashSet, VecDeque};
+//!
+//! let board = Board {
+//!     rows: 3,
+//!     cols: 3,
+//!     pieces: Vec::new(),
+//! };
+//! let pieces = [ChessPiece::King, ChessPiece::King, ChessPiece::Rook];
+//! let mut solutions: HashSet<Board> = HashSet::new();
+//! let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+//! board_stack.push_front((board, &pieces));
+//! solution(&mut board_stack, &mut solutions, &mut HashSet::new());
+//! println!("Found {} solutions", solutions.len());
+//! ```
+
 use std::collections::{HashSet, VecDeque};
 
+/// Represents the different types of chess pieces used in the puzzle.
+///
+/// Each piece type has unique movement and attack patterns:
+/// - `Rook`: Attacks horizontally and vertically
+/// - `Bishop`: Attacks diagonally
+/// - `Knight`: Attacks in an L-shape (2 squares in one direction, 1 in perpendicular)
+/// - `Queen`: Attacks horizontally, vertically, and diagonally
+/// - `King`: Attacks all adjacent squares (one square in any direction)
 #[derive(PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord, Debug)]
 pub enum ChessPiece {
     Rook,
@@ -10,17 +41,43 @@ pub enum ChessPiece {
     King,
 }
 
+/// Represents a chess piece placed on a specific position on the board.
+///
+/// Coordinates use a **1-indexed system** where (1,1) represents the top-left
+/// corner of the board. A piece at position (row, col) means it's at the `row`-th
+/// row and `col`-th column.
+///
+/// # Fields
+///
+/// * `row` - The row position (1-indexed, 1 ≤ row ≤ board_rows)
+/// * `col` - The column position (1-indexed, 1 ≤ col ≤ board_cols)
+/// * `piece` - The type of chess piece (King, Queen, Rook, Bishop, or Knight)
 #[derive(PartialEq, Eq, Hash, Clone, Copy, PartialOrd, Ord, Debug)]
 pub struct Piece {
     pub row: i8,
     pub col: i8,
     pub piece: ChessPiece,
 }
+/// Represents a chess board configuration with its dimensions and placed pieces.
+///
+/// A board tracks its size (rows × cols) and all pieces currently placed on it.
+/// Boards are used to explore different configurations during the search for valid
+/// solutions where no pieces attack each other.
+///
+/// # Fields
+///
+/// * `rows` - The number of rows on the board (height)
+/// * `cols` - The number of columns on the board (width)
+/// * `used_pieces` - Vector of all pieces currently placed on this board
+///
+/// # Note
+///
+/// Boards use 1-indexed coordinates, so valid positions range from (1,1) to (rows,cols).
 #[derive(PartialEq, Eq, Clone, Hash, Debug, PartialOrd)]
 pub struct Board {
-    pub m: i8,
-    pub n: i8,
-    pub used_pieces: Vec<Piece>,
+    pub rows: i8,
+    pub cols: i8,
+    pub pieces: Vec<Piece>,
 }
 
 impl Piece {
@@ -30,7 +87,7 @@ impl Piece {
             (2, -1),
             (2, 1),
             (1, 2),
-            (0, 0),
+            (0,0),
             (-1, 2),
             (-2, 1),
             (-2, -1),
@@ -49,8 +106,8 @@ impl Piece {
             (-1, 0),
             (-1, 1),
             (0, -1),
-            (0, 0),
             (0, 1),
+            (0,0),
             (1, -1),
             (1, 0),
             (1, 1),
@@ -62,6 +119,32 @@ impl Piece {
         })
     }
 
+    /// Determines whether this piece can attack another piece based on chess movement rules.
+    ///
+    /// Each piece type has different attack patterns:
+    /// - **Rook**: Can attack any piece in the same row or column
+    /// - **Bishop**: Can attack any piece on the same diagonal
+    /// - **Knight**: Can attack pieces that are 2 squares away in one direction and 1 square perpendicular
+    /// - **Queen**: Combines Rook and Bishop (same row, column, or diagonal)
+    /// - **King**: Can attack any piece in the 8 adjacent squares
+    ///
+    /// # Arguments
+    ///
+    /// * `chess_piece` - The target piece to check if it can be attacked
+    ///
+    /// # Returns
+    ///
+    /// `true` if this piece can attack the target piece, `false` otherwise
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use chess::{Piece, ChessPiece};
+    ///
+    /// let rook = Piece { row: 1, col: 1, piece: ChessPiece::Rook };
+    /// let target = Piece { row: 1, col: 5, piece: ChessPiece::King };
+    /// assert!(rook.attacks(target)); // Rook attacks along the same row
+    /// ```
     pub fn attacks(self, chess_piece: Piece) -> bool {
         match self.piece {
             ChessPiece::Rook => self.row == chess_piece.row || self.col == chess_piece.col,
@@ -80,26 +163,150 @@ impl Piece {
 }
 
 impl Board {
-    pub fn new(m: i8, n: i8, used_pieces: Vec<Piece>) -> Board {
-        Board { m, n, used_pieces }
+    /// Creates a new chess board with the specified dimensions and pieces.
+    ///
+    /// # Arguments
+    ///
+    /// * `rows` - The number of rows (height) of the board
+    /// * `cols` - The number of columns (width) of the board
+    /// * `used_pieces` - Vector of pieces already placed on the board
+    ///
+    /// # Returns
+    ///
+    /// A new `Board` instance with the given configuration
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use chess::Board;
+    ///
+    /// let board = Board::new(8, 8, Vec::new());
+    /// assert_eq!(board.rows, 8);
+    /// assert_eq!(board.cols, 8);
+    /// ```
+    pub fn new(rows: i8, cols: i8, used_pieces: Vec<Piece>) -> Board {
+        Board { rows, cols, pieces: used_pieces }
     }
 
+    /// Checks whether a piece can be safely placed without attacking or being attacked.
+    ///
+    /// A position is considered safe if the piece to be placed neither attacks any existing
+    /// piece on the board, nor is attacked by any existing piece.
+    ///
+    /// # Arguments
+    ///
+    /// * `chess_piece` - The piece to check for safe placement
+    ///
+    /// # Returns
+    ///
+    /// `true` if the piece can be safely placed, `false` if it would attack or be attacked
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use chess::{Board, Piece, ChessPiece};
+    ///
+    /// let board = Board::new(3, 3, Vec::new());
+    /// let piece = Piece { row: 1, col: 1, piece: ChessPiece::Rook };
+    /// assert!(board.is_safe(piece)); // Safe on an empty board
+    /// ```
     pub fn is_safe(&self, chess_piece: Piece) -> bool {
-        self.used_pieces
+        self.pieces
             .iter()
             .all(|&piece| !piece.attacks(chess_piece) && !chess_piece.attacks(piece))
     }
 
+    /// Creates a new board with the given piece added to it.
+    ///
+    /// This method returns a new `Board` instance with the piece added to the list of
+    /// placed pieces. If the piece already exists at that exact position, it won't be
+    /// added again. The pieces are kept sorted to ensure consistent board comparisons.
+    ///
+    /// # Arguments
+    ///
+    /// * `chess_piece` - The piece to place on the board
+    ///
+    /// # Returns
+    ///
+    /// A new `Board` with the piece added (or the same pieces if it was already present)
+    ///
+    /// # Note
+    ///
+    /// This method does not check if the placement is safe - use `is_safe()` first
+    /// if you need to verify the piece won't attack or be attacked by existing pieces.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use chess::{Board, Piece, ChessPiece};
+    ///
+    /// let board = Board::new(3, 3, Vec::new());
+    /// let piece = Piece { row: 1, col: 1, piece: ChessPiece::King };
+    /// let new_board = board.place(piece);
+    /// assert_eq!(new_board.pieces.len(), 1);
+    /// ```
     pub fn place(&self, chess_piece: Piece) -> Board {
-        let mut updated_pieces = self.used_pieces.clone();
+        let mut updated_pieces = self.pieces.clone();
         if !updated_pieces.contains(&chess_piece) {
             updated_pieces.push(chess_piece);
             updated_pieces.sort();
         }
-        Board::new(self.m, self.n, updated_pieces)
+        Board::new(self.rows, self.cols, updated_pieces)
     }
 }
 
+/// Finds all unique board configurations where chess pieces don't threaten each other.
+///
+/// This function uses a backtracking algorithm to systematically explore all possible
+/// placements of the given pieces on the board. It iterates through each board position
+/// (using 1-indexed coordinates from 1 to rows/cols) and attempts to place pieces where
+/// they won't attack or be attacked by existing pieces.
+///
+/// The algorithm:
+/// 1. Takes a board state and remaining pieces to place from the work queue
+/// 2. Tries placing the next piece at every position on the board
+/// 3. If a placement is safe and valid:
+///    - If more pieces remain, adds the new configuration to the work queue
+///    - If this was the last piece, adds the complete configuration to solutions
+/// 4. Uses `tested_configurations` to avoid exploring duplicate board states
+///
+/// # Arguments
+///
+/// * `board_stack` - A work queue of (Board, remaining pieces) tuples to explore.
+///   Initially should contain one entry with an empty board and all pieces.
+/// * `solutions` - Accumulator for all valid complete board configurations found.
+///   Will be populated with boards where all pieces are placed safely.
+/// * `tested_configurations` - Cache of intermediate board states already explored,
+///   used to prune duplicate branches in the search space.
+///
+/// # Returns
+///
+/// A reference to the `solutions` HashSet containing all valid configurations.
+///
+/// # Panics
+///
+/// This function will panic if `board_stack` becomes empty during iteration,
+/// though this should not happen given the while loop condition.
+///
+/// # Example
+///
+/// ```
+/// use chess::{solution, Board, ChessPiece};
+/// use std::collections::{HashSet, VecDeque};
+///
+/// let board = Board {
+///     rows: 3,
+///     cols: 3,
+///     pieces: Vec::new(),
+/// };
+/// let pieces = [ChessPiece::King, ChessPiece::King, ChessPiece::Rook];
+/// let mut solutions: HashSet<Board> = HashSet::new();
+/// let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
+/// board_stack.push_front((board, &pieces));
+///
+/// solution(&mut board_stack, &mut solutions, &mut HashSet::new());
+/// assert_eq!(solutions.len(), 4); // 4 valid configurations for this setup
+/// ```
 pub fn solution<'a>(
     board_stack: &mut VecDeque<(Board, &[ChessPiece])>,
     solutions: &'a mut HashSet<Board>,
@@ -107,8 +314,8 @@ pub fn solution<'a>(
 ) -> &'a HashSet<Board> {
     while !board_stack.is_empty() {
         let (board, pieces) = board_stack.pop_back().unwrap();
-        for row in 1..=board.m {
-            for col in 1..=board.n {
+        for row in 1..=board.rows {
+            for col in 1..=board.cols {
                 let new_piece = Piece {
                     row,
                     col,

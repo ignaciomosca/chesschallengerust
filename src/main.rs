@@ -3,9 +3,9 @@ use std::{collections::HashSet, collections::VecDeque};
 
 fn main() {
     let board = Board {
-        m: 7,
-        n: 7,
-        used_pieces: Vec::new(),
+        rows: 7,
+        cols: 7,
+        pieces: Vec::new(),
     };
     let pieces = [
         ChessPiece::King,
