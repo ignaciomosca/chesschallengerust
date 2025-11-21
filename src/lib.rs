@@ -8,6 +8,7 @@
 //! ```
 //! use chess::{solution, Board, ChessPiece};
 //! use std::collections::{HashSet, VecDeque};
+//! use std::rc::Rc;
 //!
 //! let board = Board {
 //!     rows: 3,
@@ -15,14 +16,15 @@
 //!     pieces: Vec::new(),
 //! };
 //! let pieces = [ChessPiece::King, ChessPiece::King, ChessPiece::Rook];
-//! let mut solutions: HashSet<Board> = HashSet::new();
-//! let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
-//! board_stack.push_front((board, &pieces));
+//! let mut solutions: HashSet<Rc<Board>> = HashSet::new();
+//! let mut board_stack: VecDeque<(Rc<Board>, &[ChessPiece])> = VecDeque::new();
+//! board_stack.push_front((Rc::new(board), &pieces));
 //! solution(&mut board_stack, &mut solutions, &mut HashSet::new());
 //! println!("Found {} solutions", solutions.len());
 //! ```
 
 use std::collections::{HashSet, VecDeque};
+use std::rc::Rc;
 
 /// Represents the different types of chess pieces used in the puzzle.
 ///
@@ -293,6 +295,7 @@ impl Board {
 /// ```
 /// use chess::{solution, Board, ChessPiece};
 /// use std::collections::{HashSet, VecDeque};
+/// use std::rc::Rc;
 ///
 /// let board = Board {
 ///     rows: 3,
@@ -300,40 +303,45 @@ impl Board {
 ///     pieces: Vec::new(),
 /// };
 /// let pieces = [ChessPiece::King, ChessPiece::King, ChessPiece::Rook];
-/// let mut solutions: HashSet<Board> = HashSet::new();
-/// let mut board_stack: VecDeque<(Board, &[ChessPiece])> = VecDeque::new();
-/// board_stack.push_front((board, &pieces));
+/// let mut solutions: HashSet<Rc<Board>> = HashSet::new();
+/// let mut board_stack: VecDeque<(Rc<Board>, &[ChessPiece])> = VecDeque::new();
+/// board_stack.push_front((Rc::new(board), &pieces));
 ///
 /// solution(&mut board_stack, &mut solutions, &mut HashSet::new());
 /// assert_eq!(solutions.len(), 4); // 4 valid configurations for this setup
 /// ```
 pub fn solution<'a>(
-    board_stack: &mut VecDeque<(Board, &[ChessPiece])>,
-    solutions: &'a mut HashSet<Board>,
-    tested_configurations: &mut HashSet<Board>,
-) -> &'a HashSet<Board> {
+    board_stack: &mut VecDeque<(Rc<Board>, &[ChessPiece])>,
+    solutions: &'a mut HashSet<Rc<Board>>,
+    tested_configurations: &mut HashSet<Rc<Board>>,
+) -> &'a HashSet<Rc<Board>> {
     while !board_stack.is_empty() {
-        let (board, pieces) = board_stack.pop_back().unwrap();
-        for row in 1..=board.rows {
-            for col in 1..=board.cols {
-                let new_piece = Piece {
-                    row,
-                    col,
-                    piece: pieces[0],
-                };
-                if board.is_safe(new_piece) {
-                    let new_board = board.place(new_piece);
-                    if pieces.len() != 1 {
-                        if tested_configurations.insert(new_board.clone()) {
-                            let next_board = new_board.clone();
-                            let tail = &pieces[1..pieces.len()];
-                            board_stack.push_front((next_board, tail));
+        match board_stack.pop_back() {
+            None => panic!("Board stack is empty!"),
+            Some((board_rc, pieces)) => {
+                let board = &*board_rc;
+                for row in 1..=board.rows {
+                    for col in 1..=board.cols {
+                        let new_piece = Piece {
+                            row,
+                            col,
+                            piece: pieces[0],
+                        };
+                        if board.is_safe(new_piece) {
+                            let new_board = board_rc.place(new_piece);
+                            let new_board_rc = Rc::new(new_board);
+                            if pieces.len() != 1 {
+                                if tested_configurations.insert(Rc::clone(&new_board_rc)) {
+                                    let tail = &pieces[1..pieces.len()];
+                                    board_stack.push_front((Rc::clone(&new_board_rc), tail));
+                                }
+                            } else {
+                                solutions.insert(new_board_rc);
+                            }
                         }
-                    } else {
-                        solutions.insert(new_board);
                     }
                 }
-            }
+            },
         }
     }
     solutions
